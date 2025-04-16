@@ -1,7 +1,7 @@
 import streamlit as st
 from tipi import calculate_scores
 import json
-
+from utils import  save_state_json
 def submit_survey():
     st.session_state["survey_completed"] = True
     st.session_state["tipi_scores"] = calculate_scores(st.session_state["survey"])
@@ -13,42 +13,11 @@ def survey():
 
     file_path = "questionarre/deutsch_questionarre_slider.json"
 
-    st.title("Umfrage")
+    st.title("Identifikation")
 
     st.markdown("Bitte geben Sie Ihre ID ein")
    # name = st.text_input("ID", value=st.session_state["survey"].get("ID", ""))
 
-    questions = []
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            questions = json.load(file)  # Read JSON file
-    except FileNotFoundError:
-        st.error("❌ Die Datei wurde nicht gefunden. Bitte überprüfen Sie den Pfad.")
-        return 
-    except json.JSONDecodeError:
-        st.error("❌ Fehler beim Laden der JSON-Datei. Bitte überprüfen Sie das Format.")
-        return
-
-    # Store responses
-    if "responses" not in st.session_state:
-        st.session_state["survey"]["responses"] = {}
-
-    options_final = [
-      "Starke Ablehnung",  "Ablehnung", "Neutral",  "Zustimmung", "Starke Zustimmung"
-
-             ]
-
-    #st.subheader("Fragebogen", divider='gray')
-    st.markdown("Im Folgenden finden Sie 14 Aussagen. \nBitte wählen Sie aus, inwiefern diese auf Sie zutreffen.")
-    
-    responses= {}
-    # with st.form(key="my_form"):
-    #     for idx, q in enumerate(questions):
-    #         q_key = f"q{idx + 1}"
-    #         selected_option = st.select_slider( q["question"], options = options, key= q_key, value = st.session_state["survey"].get(q_key,options[3]))
-    #         st.session_state["survey"]["responses"][q_key] = selected_option
-    #         st.subheader("",divider='gray')
-    #         responses[q_key]=selected_option
 
     with st.form(key="my_form"):
         name = st.text_input("ID", value=st.session_state["survey"].get("ID", ""))
@@ -56,14 +25,7 @@ def survey():
 
         # Abfrage nach Hautfarbe
        
-        for idx, q in enumerate(questions):
-            q_key = f"q{idx + 1}"
-            st.markdown(q["question"])
-            selected_option = st.radio( q["question"],  options_final, key= q_key,index=2, label_visibility="collapsed")
-            st.session_state["survey"]["responses"][q_key] = selected_option
-            st.subheader("",divider='gray')
-            responses[q_key]=selected_option
-
+    
         # Submit button
         submit_button = st.form_submit_button("Absenden")
 
@@ -76,13 +38,7 @@ def survey():
             st.success("Vielen Dank für Ihre Antworten!")
             st.write("### Ihre Auswahl:")
         
-
-       
-
-            for idx, q in enumerate(questions):
-                selected_options = st.session_state["survey"]["responses"].get(f"q{idx}", [])
-                st.write(f"**Q{idx}:** {', '.join(selected_options) if selected_options else 'Keine Auswahl'}")
-
             st.session_state["page"] = "chat"
             print('Survey Data: ',st.session_state["survey"] )
+            save_state_json()
             st.rerun()
