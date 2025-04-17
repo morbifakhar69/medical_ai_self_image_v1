@@ -9,7 +9,7 @@ def welcome_page():
     **So funktioniert es:**
     1. **Identifikation** - Bitte geben Sie Ihre anonyme ID auf der folgenden Seite ein. 
     \n
-    2. **Foto Hochgeladenes** – Erfassen Sie die betroffene Hautstelle. 
+    2. **Hochgeladenes Foto** – Erfassen Sie die betroffene Hautstelle. 
     \n
     3. **Mit dem KI-Assistenten chatten** – Interagieren Sie mit dem künstlich intelligenten Assistenten und entscheiden Sie darauf basierend, ob Sie einen Arzttermin vereinbaren möchten.
     """)
